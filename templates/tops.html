@@ -3,7 +3,7 @@
 <header>
     <meta charset="UTF-8">
     <title>Atmiņas spēle</title>
-    <link href="static/style.css" rel="stylesheet">
+    <link href="/static/style.css" rel="stylesheet">
 </header>
 <body>
     <div class="ietvars"><!--pelēkais laukums-->
@@ -11,32 +11,32 @@
             <h1>Atmiņas spēle</h1>
             <ul>
                 <li><a href="/">Sākums</a></li>
-                <li><a href="spele">Spēle</a></li>
-                <li><a href="tops">Tops</a></li>
-                <li><a href="par">Par projektu</a></li>
+                <li><a href="/spele">Spēle</a></li>
+                <li><a href="/tops">Tops</a></li>
+                <li><a href="/par">Par projektu</a></li>
             </ul>
         </div><!--aizver galvieni-->
         <div class="saturs">
-            Aktīvā rezultāta paziņošana<br>
+            <h3>Spēles tops</h3>
+            <div id="rezultatsKonteiners" class="rezultats" style="display: none;">
+                <p><b>Tavs rezultāts:</b><span id="rezVards"></span> - <b>klikški:</b><span id="rezKlikski"></span>, <b>laiks:</b><span id="rezLaiks"></span></p>
+                <button id="pievienotTopam">Pievienoties top'am</button>
+                <p id="pievienotStatuss"></p>
+            </div>
 
-            Poga "Pievienoties top"<br>
+            
 
-            Tabula Tops
-
-
-
-
-
-
+            <table class="tops">
+                <tr>
+                    <td>Spēlētājs</td>
+                    <td>Klikšķi</td>
+                    <td>Laiks</td>
+                    <td>Datums</td>
+                </tr>
+            </table>
         </div><!--aizver saturs-->
-
-
-
-
     </div><!--aizver ietvars-->
+<script src="/static/top.js"></script>
 </body>
-
-
-
 
 </html>

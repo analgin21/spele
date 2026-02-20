@@ -1,95 +1,125 @@
 //no URL iegūst vārdu
 let adrese = window.location.hash.substring(1);
-vards = decodeURI(adrese.split(',')[0]);
-
+let vards = decodeURI(adrese.split(',')[0] || '').trim();
 
 //mainīgie spēles darbībai
-let laiks = 0
-let klikski = 0
+let laiks = 0;
+let klikski = 0;
+
+//taimera mainīgie, taimeris strādā ar 1.klikski
+let timerId = null;
+let timerStarted = false;
+
+function formatTime(seconds) {
+    const m = String(Math.floor(seconds / 60)).padStart(2, '0');
+    const s = String(seconds % 60).padStart(2, '0');
+    return `${m}:${s}`
+}
+
+function updateHUD() {
+    const elLaiks = document.querySelector('#laiks');
+    const elKlikski = document.querySelector('#klikski');
+    if (elLaiks) elLaiks.textContent = formatTime(laiks);
+    if (elKlikski) elKlikski.textContent = klikski;
+}
+
+function startTimerIfNeeded() {
+    if (timerStarted) return;
+    timerStarted = true;
+    timerId = setInterval(() => {
+        laiks++;
+        updateHUD();
+    }, 1000);
+}
+
+function stopTimer() {
+    if (timerId) {
+        clearInterval(timerId);
+        timerId = null;
+    }
+}
+
 //masīvi spēles darbībai
 const laukumi = ['L01','L02','L03','L04','L05','L06','L07','L08','L09','L10','L11','L12']
 const laukumiSaturs = ['👽','🤖','😇','👽','🤕','🤠','🤕','🥶','🤠','🤖','🥶','😇']
 let atvertieLaukumi = []
 let pedejieDivi = []
 
-// sajauc smailikus randoma( Fisher-)
-let laukumiSajaukti =  laukumiSaturs.sort(() => Math.random() - 0.5);
+//Sajauc smailikus nejaušā secībā (Fisher-Yates algoritms)
+let laukumiSajaukti = [...laukumiSaturs].sort(() => Math.random() - 0.5);
 
-//genere speles laukumu dinamiski
+
+
+//Ģenerē spēles laukumu dinamiski
 document.addEventListener("DOMContentLoaded", function() {
+    //ja vāds nav, aizūta uz sākumlapu
+    if (!vards) {
+        window.location.href = '/';
+        return;
+    }
+
     let spelesLauks = document.querySelector('.speles_lauk');
     spelesLauks.innerHTML = '';
-    laukumiSajaukti.forEach((emoji,index => {
+    laukumiSajaukti.forEach((emoji, index) => {
         let bloks = document.createElement("div");
         bloks.classList.add("bloks");
         bloks.setAttribute("data-index", index);
         bloks.innerText = "";
-        bloks.addEventListener("click", function(){
+        bloks.addEventListener("click", function() {
             veiktGajienu(bloks, emoji);
         });
         spelesLauks.appendChild(bloks);
-    }));
+    });
+
+    const elVards = document.querySelector('#vardsHUD');
+    if (elVards) elVards.textContent = vards;
+    updateHUD();
 });
-function veiktGajienu(bloks, emoji){
-    if(bloks.classList.contains("atverts") || pedejieDivi.length === 2) {
-        return //nelauj klikskinat uz jau atvertiem un ja 2 ir atvertas
+
+function veiktGajienu(bloks, emoji) {
+    if (bloks.classList.contains("atverts") || pedejieDivi.length === 2) {
+        return //neļauj klikšķināt uz jau atvērtām kartītēm vai ja 2 atvērtas
     }
-    // parada emiji tikai uz kilkski
+    
+    startTimerIfNeeded();
+    //parāda emoji tikai uzklikšķinot
     bloks.innerText = emoji;
     bloks.classList.add("atverts");
     klikski++;
-    // saglaba 2 pedejas kartites
+    updateHUD();
+
+    //saglabā 2 pēdējās kartītes
     pedejieDivi.push({bloks, emoji});
 
-    //ja atvertas 2 kartites parbauda vai sakrit
+    //ja atvērtas 2 kartītes, pārbauda vai sakrīt
     if (pedejieDivi.length === 2) {
         let [pirmais, otrais] = pedejieDivi;
+        //ja atvērtas 2 kartītes, pārbauda vai vienādas
         if (pirmais.emoji === otrais.emoji) {
             atvertieLaukumi.push(pirmais, otrais);
-            pedejieDivi =[];
+            pedejieDivi = [];
 
-            //parbauda vai spele pabeigta (vai visi laukumi atverti)
-            if(atvertieLaukumi.length === laukumiSajaukti.length) {
+            //vai spēle pabeigta (visi laukumi atvērti)
+            if (atvertieLaukumi.length === laukumiSajaukti.length) {
+                stopTimer();
+
+                //parāda rezultātu
                 setTimeout(() => {
-                    alert(`Apsveicu, ${vards}! Tu pabeidz spēli ar ${klikski} klikšķiem!`);
-                }, 500);
+                    alert(`Apsveicu, ${vards}!\nKlikski: ${klikski}\nLaiks: ${formatTime(laiks)}`);
+                    //vardu un rezultatu nodod uz top sadaļu caur URL
+                    document.location = `/tops#${encodeURIComponent(vards)},${klikski},${laiks}`;
+                }, 300);
 
-                //-->
-                let rezultats = {
-                    vards: vards,
-                    klikski: klikski,
-                    laiks: laiks,
-                    datums: new Date().toISOString().split('T')[0]
-                };
-
-                //dati uz serveri
-                fetch('pievienot-rezultatu', {
-                        method: 'POST',
-                        headers:{'Content-Type:':'application/json',},
-                        body: JSON.stringify(rezultats)
-
-                    }).then(response => {
-                        if (response.ok){
-                            console.log('veiksmigi nosutits')
-                            document.location = 'top#' +vards+','+klikski+','+laiks;
-                        } else {
-                            alert('neizdevās saglabāt rezultātus!')
-                        }
-                    })
-                }
             }
-
         } else {
-            //ja atvertie 2 laukumi nav vienadi
+            //ja 2 atvērtie nav vienādi
             setTimeout(() => {
                 pirmais.bloks.innerText = "";
                 otrais.bloks.innerText = "";
                 pirmais.bloks.classList.remove("atverts");
                 otrais.bloks.classList.remove("atverts");
                 pedejieDivi = [];
-            }, 1000)
+            }, 800);
         }
-
     }
-
-
+}

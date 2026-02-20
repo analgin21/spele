@@ -29,6 +29,7 @@ li {
     text-align: center;
     margin: auto;
     padding: 10px;
+
 }
 
 .bloks {
@@ -40,12 +41,15 @@ li {
     height: 100px;
     margin: 10px;
     font-size: 45px;
+    border-radius: 5px;
+    transition: background 0.3s;
 }
 
 .bloks:hover {
-    background: #ff4747;
+    background:  #ff4747;
     cursor: pointer;
 }
+
 a {
     text-decoration: none;
     display: inline-block;
