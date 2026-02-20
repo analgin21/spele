@@ -39,3 +39,57 @@ async function atlasitTop() {
 
 }
 }
+
+async function pievienotiesTopam(rezultats) {
+    const poga = document.querySelector('#pievienotTopam');
+    const Statuss = document.querySelector('#pievienotStatuss');
+    try {
+        if (poga) poga.disable = true;
+        if (statuss) statuss.textContent = 'Saglabā...';
+        const payload = {
+            vards: rezultats.vards,
+            klikski: rezultats.klikski,
+            laiks: rezultats.laiks,
+            datums: new Date().toDateString().split('T')[0]
+        };
+        const response = await fetch('/pievienot-rezultatu',{
+            method: 'POST',
+            headers: {'Content-Type':'application/json'},
+            body: JSON.stringify(payload)
+        });
+        if (!response.ok) {
+            throw new Error(`Neizdevas saglabāt! Statuss:${response.status}`);
+        }
+        if (statuss) statuss.textContent = "Rezultāts ir pievienots TOPam"
+        await atlasitTop();
+                
+        
+    } catch (e) {
+        console.error(e);
+        if (statuss) statuss.textContent = "Kļūda, neizdevas pievienot rezultātu topam!";
+        if (poga) poga.disabled = false
+    }
+    
+}
+
+
+document.addEventListener('DOMContentLoaded', async () => {
+    await atlasitTop();
+    const rezultats = parseHash();
+    const konteiners = document.querySelector('#rezultatsKonteiners');
+    const poga = document.querySelector('#pievienotTopam');
+
+    if (rezultats && konteiners) {
+        konteiners.style.display = 'block';
+        document.querySelector('#razVards'),textContent = rezultats.vards;
+        document.querySelector('#rezKlikski').textContent = rezultats.klikski;
+        document.querySelector('#rezLaiks').textContent = formatTime(rezultats.laiks);  
+
+        if (poga) {
+            poga.addEventListener('click', () => pievienotiesTopam(rezultats));
+        }
+
+    } else{
+        //ja nav speles rezultata paga netiek radita (konteiners paliek display:none)
+    }
+});

@@ -76,7 +76,7 @@ function veiktGajienu(bloks, emoji){
                             alert('neizdevās saglabāt rezultātus!')
                         }
                     })
-                })
+                }
             }
 
         } else {
@@ -92,4 +92,4 @@ function veiktGajienu(bloks, emoji){
 
     }
 
-}
+
