@@ -1,0 +1,37 @@
+[
+    {
+        "id": 13,
+        "vards": "gg1212",
+        "klikski": 28,
+        "laiks": 25,
+        "datums": "2026-02-27"
+    },
+    {
+        "id": 11,
+        "vards": "gg1212",
+        "klikski": 32,
+        "laiks": 26,
+        "datums": "2026-02-20"
+    },
+    {
+        "id": 12,
+        "vards": "joske",
+        "klikski": 34,
+        "laiks": 30,
+        "datums": "2026-02-20"
+    },
+    {
+        "id": 1,
+        "vards": "Anonīmais",
+        "klikski": 200,
+        "laiks": 500,
+        "datums": "2020-01-01"
+    },
+    {
+        "id": 2,
+        "vards": "Anonīmais",
+        "klikski": 200,
+        "laiks": 500,
+        "datums": "2020-01-01"
+    }
+]
