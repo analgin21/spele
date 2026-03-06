@@ -74,3 +74,11 @@ a:active {
     color: rgb(215, 130, 236);
     transform: scale(1.05);
 }
+
+p {
+  padding: 15px;
+}
+
+p {
+  header: 15px;
+}
