@@ -64,10 +64,10 @@ function parseHash() {
     const poga = document.querySelector('#pievienotTopam');
     const statuss = document.querySelector('#pievienotStatuss');
     try {
-        if (poga) poga.disable = true;
+        if (poga) poga.disabled = true;
         if (statuss) statuss.textContent = 'Saglabā...';
         const payload = {
-            varads: rezultats.vards,
+            vards: rezultats.vards,
             klikski: rezultats.klikski,
             laiks: rezultats.laiks,
             datums: new Date().toISOString().split('T')[0]
@@ -99,7 +99,7 @@ function parseHash() {
 
     if (rezultats && konteiners) {
         konteiners.style.display = 'block';
-        document.querySelector('#rezVards'),textContent = rezultats.vards;
+        document.querySelector('#rezVards').textContent = rezultats.vards;
         document.querySelector('#rezKlikski').textContent = rezultats.klikski;
         document.querySelector('#rezLaiks').textContent = formatTime(rezultats.laiks);
 

@@ -41,6 +41,7 @@ def pievienot_rezultatu():
         top_5 =sorted(top_rezultati, key=lambda x: (x['klikski'], x['laiks']))[:5]
         with open('score.json', 'w', encoding='UTF-8') as file:
             json.dump(top_5, file, ensure_ascii=False, indent=4)
+        return jsonify({'status': 'ok'}), 200
     except Exception:
         return jsonify({'status': 'error'}), 500
 
